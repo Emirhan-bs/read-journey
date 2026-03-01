@@ -1,0 +1,148 @@
+.header {
+  background-color: #1c1c1c;
+  border-radius: 30px;
+}
+
+.container {
+  padding: 0 40px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 650px;
+}
+
+.logoDesktop { display: block; }
+.logoMobile { display: none; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.navLink {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-grey-1);
+  transition: color var(--transition);
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.navLink:hover { color: var(--color-white); }
+
+.navLink.active {
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #4f9df7;
+  border-radius: var(--radius-full);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  background-color: #1f1f1f;
+  border: 1px solid #ffffff1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-white);
+}
+
+.logoutBtn {
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  border: 1px solid #ffffff4d;
+  font-size: 16px;
+  color: var(--color-white);
+  transition: background-color var(--transition);
+  white-space: nowrap;
+}
+
+.logoutBtn:hover { background-color: #ffffff1a; }
+
+.burgerBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: #00000080;
+  z-index: 99;
+}
+
+.mobileMenu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  max-width: 300px;
+  height: 100vh;
+  background-color: #1c1c1c;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mobileNavLink {
+  font-size: 18px;
+  color: var(--color-grey-1);
+  transition: color var(--transition);
+}
+
+.mobileNavLink:hover { color: var(--color-white); }
+
+@media (max-width: 1439px) {
+  .nav { display: none; }
+  .logoDesktop { display: none; }
+  .logoMobile { display: block; }
+  .burgerBtn { display: flex; }
+  .userName { display: none; }
+  .logoutBtn { display: none; }
+  .container { padding: 0 20px; }
+}
+
+@media (min-width: 1440px) {
+  .burgerBtn { display: none; }
+}

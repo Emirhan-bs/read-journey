@@ -1,56 +1,37 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../services/api";
-// Register
-export const register = createAsyncThunk(
-  "auth/register",
-  async (useRouteLoaderData, { rejectWithValue }) => {
-    try {
-      const { data } = await api.post("/auth/signup", useRouteLoaderData);
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Registration failed",
-      );
-    }
-  },
-);
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../services/api';
 
-// Login
-export const login = createAsyncThunk(
-  "auth/login",
-  async (userData, { rejectWithValue }) => {
-    try {
-      const { data } = await api.post("/auth/signin", userData);
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Login failed");
-    }
-  },
-);
+export const register = createAsyncThunk('auth/register', async (data, { rejectWithValue }) => {
+  try {
+    const res = await api.post('/users/signup', data);
+    return res.data;
+  } catch (e) {
+    return rejectWithValue(e.response?.data?.message);
+  }
+});
 
-// Logout
-export const logout = createAsyncThunk(
-  "auth/signout",
-  async (_, { rejectWithValue }) => {
-    try {
-      await api.post("/auth/signout");
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Logout failed");
-    }
-  },
-);
+export const login = createAsyncThunk('auth/login', async (data, { rejectWithValue }) => {
+  try {
+    const res = await api.post('/users/signin', data);
+    return res.data;
+  } catch (e) {
+    return rejectWithValue(e.response?.data?.message);
+  }
+});
 
-// Refresh User
-export const refreshUser = createAsyncThunk(
-  "auth/refresh",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await api.get("/auth/current");
-      return data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "User refresh failed",
-      );
-    }
-  },
-);
+export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
+  try {
+    await api.post('/users/signout');
+  } catch (e) {
+    return rejectWithValue(e.response?.data?.message);
+  }
+});
+
+export const refreshUser = createAsyncThunk('auth/refresh', async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get('/users/current');
+    return res.data;
+  } catch (e) {
+    return rejectWithValue(e.response?.data?.message);
+  }
+});

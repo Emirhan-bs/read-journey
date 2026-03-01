@@ -1,0 +1,14 @@
+.page {
+  min-height: 100vh;
+  background-color: #141414;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+}

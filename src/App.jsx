@@ -1,31 +1,44 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { refreshUser } from './redux/auth/authOperations';
+import useAuth from './hooks/useAuth';
+import Layout from './components/Layout/Layout';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RecommendedPage from './pages/RecommendedPage/RecommendedPage';
+import LibraryPage from './pages/LibraryPage/LibraryPage';
+import ReadingPage from './pages/ReadingPage/ReadingPage';
 
-function App() {
-  const [count, setCount] = useState(0);
+const PrivateRoute = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn ? children : <Navigate to="/login" />;
+};
+
+const PublicRoute = ({ children }) => {
+  const { isLoggedIn } = useAuth();
+  return !isLoggedIn ? children : <Navigate to="/recommended" />;
+};
+
+const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) dispatch(refreshUser());
+  }, [dispatch]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank"></a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Routes>
+      <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+      <Route path="/recommended" element={<PrivateRoute><Layout><RecommendedPage /></Layout></PrivateRoute>} />
+      <Route path="/library" element={<PrivateRoute><Layout><LibraryPage /></Layout></PrivateRoute>} />
+      <Route path="/reading/:bookId" element={<PrivateRoute><Layout><ReadingPage /></Layout></PrivateRoute>} />
+      <Route path="/" element={<Navigate to="/recommended" />} />
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
   );
-}
+};
 
 export default App;
