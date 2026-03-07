@@ -29,7 +29,10 @@ const ReadingPage = () => {
   const handleStart = async () => {
     if (!page) return toast.error("Enter page number");
     try {
-      await api.post(`/books/reading/start`, { bookId, page: Number(page) });
+      await api.post("/books/reading/start", {
+        id: bookId,
+        page: Number(page),
+      });
       toast.success("Reading started!");
       dispatch(fetchLibrary());
     } catch (e) {
@@ -40,7 +43,10 @@ const ReadingPage = () => {
   const handleStop = async () => {
     if (!page) return toast.error("Enter page number");
     try {
-      await api.post(`/books/reading/finish`, { bookId, page: Number(page) });
+      await api.post("/books/reading/finish", {
+        id: bookId,
+        page: Number(page),
+      });
       setPage("");
       toast.success("Reading stopped!");
       dispatch(fetchLibrary());
@@ -61,7 +67,7 @@ const ReadingPage = () => {
 
   const totalRead = progress.reduce(
     (acc, p) => acc + ((p.finishPage || 0) - (p.startPage || 0)),
-    0
+    0,
   );
   const totalPages = book?.totalPages || 1;
   const percent = Math.min(Math.round((totalRead / totalPages) * 100), 100);
@@ -131,8 +137,10 @@ const ReadingPage = () => {
                     </div>
                     <div className={styles.diaryPercent}>
                       {Math.round(
-                        ((entry.finishPage - entry.startPage) / totalPages) * 100
-                      )}%
+                        ((entry.finishPage - entry.startPage) / totalPages) *
+                          100,
+                      )}
+                      %
                     </div>
                   </li>
                 ))
@@ -144,12 +152,25 @@ const ReadingPage = () => {
             <div className={styles.stats}>
               <div className={styles.circleWrap}>
                 <svg viewBox="0 0 120 120" className={styles.circle}>
-                  <circle cx="60" cy="60" r="54" fill="none" stroke="#262626" strokeWidth="12" />
                   <circle
-                    cx="60" cy="60" r="54" fill="none" stroke="#30b94d" strokeWidth="12"
+                    cx="60"
+                    cy="60"
+                    r="54"
+                    fill="none"
+                    stroke="#262626"
+                    strokeWidth="12"
+                  />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="54"
+                    fill="none"
+                    stroke="#30b94d"
+                    strokeWidth="12"
                     strokeDasharray={`${2 * Math.PI * 54}`}
                     strokeDashoffset={`${2 * Math.PI * 54 * (1 - percent / 100)}`}
-                    strokeLinecap="round" transform="rotate(-90 60 60)"
+                    strokeLinecap="round"
+                    transform="rotate(-90 60 60)"
                   />
                 </svg>
                 <span className={styles.circleText}>{percent}%</span>
@@ -168,14 +189,20 @@ const ReadingPage = () => {
           <div className={styles.bookWrap}>
             <div className={styles.bookImgWrap}>
               {book.imageUrl ? (
-                <img src={book.imageUrl} alt={book.title} className={styles.bookImg} />
+                <img
+                  src={book.imageUrl}
+                  alt={book.title}
+                  className={styles.bookImg}
+                />
               ) : (
                 <div className={styles.bookImgPlaceholder} />
               )}
             </div>
             <p className={styles.bookTitle}>{book.title}</p>
             <p className={styles.bookAuthor}>{book.author}</p>
-            <button className={`${styles.recordBtn} ${isReading ? styles.recordActive : ""}`}>
+            <button
+              className={`${styles.recordBtn} ${isReading ? styles.recordActive : ""}`}
+            >
               <Icon id="error" width={24} height={24} />
             </button>
           </div>
@@ -192,11 +219,25 @@ const ReadingPage = () => {
             </p>
             <div className={styles.circleWrap}>
               <svg viewBox="0 0 120 120" className={styles.circle}>
-                <circle cx="60" cy="60" r="54" fill="none" stroke="#262626" strokeWidth="12" />
                 <circle
-                  cx="60" cy="60" r="54" fill="none" stroke="#30b94d" strokeWidth="12"
-                  strokeDasharray={`${2 * Math.PI * 54}`} strokeDashoffset="0"
-                  strokeLinecap="round" transform="rotate(-90 60 60)"
+                  cx="60"
+                  cy="60"
+                  r="54"
+                  fill="none"
+                  stroke="#262626"
+                  strokeWidth="12"
+                />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="54"
+                  fill="none"
+                  stroke="#30b94d"
+                  strokeWidth="12"
+                  strokeDasharray={`${2 * Math.PI * 54}`}
+                  strokeDashoffset="0"
+                  strokeLinecap="round"
+                  transform="rotate(-90 60 60)"
                 />
               </svg>
               <span className={styles.circleText}>100%</span>

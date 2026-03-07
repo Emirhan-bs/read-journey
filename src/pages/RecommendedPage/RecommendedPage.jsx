@@ -1,11 +1,20 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchRecommended, addToLibrary } from '../../redux/books/booksOperations';
-import { selectRecommended, selectTotalPages, selectCurrentPage, setPage } from '../../redux/books/booksSlice';
-import Icon from '../../components/Icon/Icon';
-import Modal from '../../components/Modal/Modal';
-import styles from './RecommendedPage.module.css';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchRecommended,
+  addToLibrary,
+  fetchLibrary,
+} from "../../redux/books/booksOperations";
+import {
+  selectRecommended,
+  selectTotalPages,
+  selectCurrentPage,
+  setPage,
+} from "../../redux/books/booksSlice";
+import Icon from "../../components/Icon/Icon";
+import Modal from "../../components/Modal/Modal";
+import styles from "./RecommendedPage.module.css";
+import toast from "react-hot-toast";
 
 const getLimit = () => {
   const w = window.innerWidth;
@@ -20,10 +29,12 @@ const RecommendedPage = () => {
   const totalPages = useSelector(selectTotalPages);
   const currentPage = useSelector(selectCurrentPage);
   const [selectedBook, setSelectedBook] = useState(null);
-  const [filters, setFilters] = useState({ title: '', author: '' });
+  const [filters, setFilters] = useState({ title: "", author: "" });
 
   useEffect(() => {
-    dispatch(fetchRecommended({ page: currentPage, limit: getLimit(), ...filters }));
+    dispatch(
+      fetchRecommended({ page: currentPage, limit: getLimit(), ...filters }),
+    );
   }, [dispatch, currentPage, filters]);
 
   const handleFilterSubmit = (e) => {
@@ -38,7 +49,8 @@ const RecommendedPage = () => {
     if (addToLibrary.rejected.match(result)) {
       toast.error(result.payload);
     } else {
-      toast.success('Book added to library!');
+      toast.success("Book added to library!");
+      dispatch(fetchLibrary());
       setSelectedBook(null);
     }
   };
@@ -51,13 +63,23 @@ const RecommendedPage = () => {
           <form onSubmit={handleFilterSubmit} className={styles.filterForm}>
             <div className={styles.inputWrap}>
               <label className={styles.label}>Book title:</label>
-              <input name="title" className={styles.input} placeholder="Enter text" />
+              <input
+                name="title"
+                className={styles.input}
+                placeholder="Enter text"
+              />
             </div>
             <div className={styles.inputWrap}>
               <label className={styles.label}>The author:</label>
-              <input name="author" className={styles.input} placeholder="Enter text" />
+              <input
+                name="author"
+                className={styles.input}
+                placeholder="Enter text"
+              />
             </div>
-            <button type="submit" className={styles.applyBtn}>To apply</button>
+            <button type="submit" className={styles.applyBtn}>
+              To apply
+            </button>
           </form>
         </div>
 
@@ -66,16 +88,38 @@ const RecommendedPage = () => {
           <ol className={styles.infoList}>
             <li>
               <span className={styles.infoNum}>1</span>
-              <p><strong>Create a personal library:</strong> <span className={styles.infoGrey}>add the books you intend to read to it.</span></p>
+              <p>
+                <strong>Create a personal library:</strong>{" "}
+                <span className={styles.infoGrey}>
+                  add the books you intend to read to it.
+                </span>
+              </p>
             </li>
             <li>
               <span className={styles.infoNum}>2</span>
-              <p><strong>Create your first workout:</strong> <span className={styles.infoGrey}>define a goal, choose a period, start training.</span></p>
+              <p>
+                <strong>Create your first workout:</strong>{" "}
+                <span className={styles.infoGrey}>
+                  define a goal, choose a period, start training.
+                </span>
+              </p>
             </li>
           </ol>
           <a href="/library" className={styles.libraryLink}>
             My library <Icon id="arrow" width={24} height={24} />
           </a>
+        </div>
+
+        <div className={styles.quoteBlock}>
+          <img
+            src="/src/assets/images/books/books.png"
+            alt="books"
+            className={styles.quoteImg}
+          />
+          <p className={styles.quoteText}>
+            "Books are <strong>windows</strong> to the world, and reading is a
+            journey into the unknown."
+          </p>
         </div>
       </aside>
 
@@ -83,20 +127,41 @@ const RecommendedPage = () => {
         <div className={styles.contentHeader}>
           <h2 className={styles.contentTitle}>Recommended</h2>
           <div className={styles.pagination}>
-            <button className={styles.pageBtn} onClick={() => dispatch(setPage(currentPage - 1))} disabled={currentPage === 1}>
-              <Icon id="arrow" width={24} height={24} className={styles.arrowLeft} />
+            <button
+              className={styles.pageBtn}
+              onClick={() => dispatch(setPage(currentPage - 1))}
+              disabled={currentPage === 1}
+            >
+              <Icon
+                id="arrow"
+                width={24}
+                height={24}
+                className={styles.arrowLeft}
+              />
             </button>
-            <button className={styles.pageBtn} onClick={() => dispatch(setPage(currentPage + 1))} disabled={currentPage === totalPages}>
+            <button
+              className={styles.pageBtn}
+              onClick={() => dispatch(setPage(currentPage + 1))}
+              disabled={currentPage === totalPages}
+            >
               <Icon id="arrow" width={24} height={24} />
             </button>
           </div>
         </div>
 
         <ul className={styles.bookList}>
-          {books.map(book => (
-            <li key={book._id} className={styles.bookCard} onClick={() => setSelectedBook(book)}>
+          {books.map((book) => (
+            <li
+              key={book._id}
+              className={styles.bookCard}
+              onClick={() => setSelectedBook(book)}
+            >
               <div className={styles.bookImgWrap}>
-                <img src={book.imageUrl} alt={book.title} className={styles.bookImg} />
+                <img
+                  src={book.imageUrl}
+                  alt={book.title}
+                  className={styles.bookImg}
+                />
               </div>
               <p className={styles.bookTitle}>{book.title}</p>
               <p className={styles.bookAuthor}>{book.author}</p>
@@ -108,11 +173,20 @@ const RecommendedPage = () => {
       {selectedBook && (
         <Modal onClose={() => setSelectedBook(null)}>
           <div className={styles.modalContent}>
-            <img src={selectedBook.imageUrl} alt={selectedBook.title} className={styles.modalImg} />
+            <img
+              src={selectedBook.imageUrl}
+              alt={selectedBook.title}
+              className={styles.modalImg}
+            />
             <h3 className={styles.modalTitle}>{selectedBook.title}</h3>
             <p className={styles.modalAuthor}>{selectedBook.author}</p>
             <p className={styles.modalPages}>{selectedBook.totalPages} pages</p>
-            <button className={styles.addBtn} onClick={() => handleAddToLibrary(selectedBook)}>Add to library</button>
+            <button
+              className={styles.addBtn}
+              onClick={() => handleAddToLibrary(selectedBook)}
+            >
+              Add to library
+            </button>
           </div>
         </Modal>
       )}
