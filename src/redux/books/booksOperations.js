@@ -5,7 +5,7 @@ export const fetchRecommended = createAsyncThunk(
   "books/fetchRecommended",
   async (
     { page = 1, limit = 10, title = "", author = "" },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const params = { page, limit };
@@ -16,7 +16,7 @@ export const fetchRecommended = createAsyncThunk(
     } catch (e) {
       return rejectWithValue(e.response?.data?.message);
     }
-  },
+  }
 );
 
 export const fetchLibrary = createAsyncThunk(
@@ -24,23 +24,25 @@ export const fetchLibrary = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get("/books/own");
+      // API may return array directly or { books: [...] }
       return Array.isArray(data) ? data : (data.books ?? []);
     } catch (e) {
       return rejectWithValue(e.response?.data?.message);
     }
-  },
+  }
 );
 
 export const addToLibrary = createAsyncThunk(
   "books/addToLibrary",
-  async (book, { rejectWithValue }) => {
+  async (book, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await api.post("/books/add", {
         title: book.title,
         author: book.author,
         totalPages: Number(book.totalPages),
       });
-      console.log("addToLibrary response:", JSON.stringify(data));
+      // Re-fetch the full library so imageUrl and all fields are up to date
+      dispatch(fetchLibrary());
       return data;
     } catch (e) {
       if (e.response?.status === 409) {
@@ -48,7 +50,7 @@ export const addToLibrary = createAsyncThunk(
       }
       return rejectWithValue(e.response?.data?.message);
     }
-  },
+  }
 );
 
 export const removeFromLibrary = createAsyncThunk(
@@ -60,5 +62,5 @@ export const removeFromLibrary = createAsyncThunk(
     } catch (e) {
       return rejectWithValue(e.response?.data?.message);
     }
-  },
+  }
 );

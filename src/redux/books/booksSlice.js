@@ -39,16 +39,23 @@ const booksSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+
       .addCase(fetchLibrary.fulfilled, (state, action) => {
         state.library = action.payload ?? [];
       })
+
       .addCase(addToLibrary.fulfilled, (state, action) => {
-        const book = action.payload.book ?? action.payload;
-        state.library.push(book);
+        const incoming = action.payload?.book ?? action.payload;
+        if (!incoming?._id) return;
+        const exists = state.library.some((b) => b._id === incoming._id);
+        if (!exists) {
+          state.library.push(incoming);
+        }
       })
+
       .addCase(removeFromLibrary.fulfilled, (state, action) => {
         state.library = state.library.filter(
-          (book) => book._id !== action.payload,
+          (book) => book._id !== action.payload
         );
       });
   },
