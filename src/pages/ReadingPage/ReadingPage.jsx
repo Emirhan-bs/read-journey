@@ -9,7 +9,6 @@ import styles from "./ReadingPage.module.css";
 import toast from "react-hot-toast";
 import api from "../../services/api";
 
-/* ── Inline mini bar-chart matching Figma green bars ── */
 const MiniBarChart = () => {
   const bars = [0.45, 0.65, 0.55, 0.8, 1.0];
   return (
@@ -125,7 +124,6 @@ const ReadingPage = () => {
   };
   const timeLeft = formatTimeLeft(minutesLeft);
 
-  // Group by date for diary display
   const groupedByDate = progress.reduce((acc, entry) => {
     const key = new Date(entry.startReading).toLocaleDateString("uk-UA", {
       day: "2-digit",
@@ -139,7 +137,6 @@ const ReadingPage = () => {
 
   return (
     <div className={styles.page}>
-      {/* ── Sidebar ── */}
       <aside className={styles.sidebar}>
         <div className={styles.readingForm}>
           <p className={styles.sideTitle}>
@@ -165,7 +162,6 @@ const ReadingPage = () => {
         </div>
 
         <div className={styles.detailsBlock}>
-          {/* Tab header */}
           <div className={styles.tabsRow}>
             <span className={styles.tabsLabel}>
               {progress.length === 0
@@ -194,7 +190,6 @@ const ReadingPage = () => {
             )}
           </div>
 
-          {/* Empty state */}
           {progress.length === 0 && (
             <div className={styles.emptyProgress}>
               <p className={styles.emptyText}>
@@ -207,7 +202,6 @@ const ReadingPage = () => {
             </div>
           )}
 
-          {/* ── Diary ── */}
           {progress.length > 0 && activeTab === "diary" && (
             <ul className={styles.diary}>
               {Object.entries(groupedByDate).map(([dateKey, entries]) =>
@@ -236,7 +230,6 @@ const ReadingPage = () => {
                       key={entry._id || `${dateKey}-${i}`}
                       className={styles.diaryEntry}
                     >
-                      {/* Row 1: checkbox + date + pages */}
                       <div className={styles.diaryTop}>
                         <span
                           className={`${styles.checkbox} ${isActive ? styles.checkboxActive : ""}`}
@@ -247,7 +240,6 @@ const ReadingPage = () => {
                         </span>
                       </div>
 
-                      {/* Row 2: stats */}
                       <div className={styles.diaryStats}>
                         <div className={styles.diaryLeft}>
                           <span className={styles.diaryPercent}>
@@ -289,7 +281,6 @@ const ReadingPage = () => {
             </ul>
           )}
 
-          {/* ── Statistics ── */}
           {progress.length > 0 && activeTab === "stats" && (
             <div className={styles.stats}>
               <p className={styles.statsDesc}>
@@ -340,7 +331,6 @@ const ReadingPage = () => {
         </div>
       </aside>
 
-      {/* ── Main content ── */}
       <section className={styles.content}>
         <div className={styles.contentHeader}>
           <h2 className={styles.contentTitle}>My reading</h2>
@@ -363,7 +353,6 @@ const ReadingPage = () => {
             <p className={styles.bookTitle}>{book.title}</p>
             <p className={styles.bookAuthor}>{book.author}</p>
 
-            {/* Red circle button — white ring border when actively reading */}
             <div
               className={`${styles.recordRing} ${isReading ? styles.recordRingActive : ""}`}
             >
