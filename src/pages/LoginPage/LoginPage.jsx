@@ -8,6 +8,7 @@ import { useState } from "react";
 import Icon from "../../components/Icon/Icon";
 import styles from "./LoginPage.module.css";
 import toast from "react-hot-toast";
+import iphoneImg from "../../assets/images/iphone.svg";
 
 const schema = yup.object({
   email: yup
@@ -101,7 +102,7 @@ const LoginPage = () => {
         </div>
       </div>
       <div className={styles.imageSide}>
-        <img src="/src/assets/images/iphone.svg" alt="app preview" />
+        <img src={iphoneImg} alt="app preview" />
       </div>
     </div>
   );
