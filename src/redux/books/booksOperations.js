@@ -5,7 +5,7 @@ export const fetchRecommended = createAsyncThunk(
   "books/fetchRecommended",
   async (
     { page = 1, limit = 10, title = "", author = "" },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const params = { page, limit };
@@ -16,7 +16,7 @@ export const fetchRecommended = createAsyncThunk(
     } catch (e) {
       return rejectWithValue(e.response?.data?.message);
     }
-  }
+  },
 );
 
 export const fetchLibrary = createAsyncThunk(
@@ -24,33 +24,33 @@ export const fetchLibrary = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await api.get("/books/own");
-      // API may return array directly or { books: [...] }
       return Array.isArray(data) ? data : (data.books ?? []);
     } catch (e) {
       return rejectWithValue(e.response?.data?.message);
     }
-  }
+  },
 );
 
 export const addToLibrary = createAsyncThunk(
   "books/addToLibrary",
-  async (book, { rejectWithValue, dispatch }) => {
+  async (book, { rejectWithValue }) => {
     try {
       const { data } = await api.post("/books/add", {
         title: book.title,
         author: book.author,
         totalPages: Number(book.totalPages),
       });
-      // Re-fetch the full library so imageUrl and all fields are up to date
-      dispatch(fetchLibrary());
-      return data;
+      const result = data?.book ?? data;
+      // Preserve imageUrl from the original recommended book object
+      // since the API does not store or return imageUrl
+      return { ...result, imageUrl: result.imageUrl || book.imageUrl || null };
     } catch (e) {
       if (e.response?.status === 409) {
         return rejectWithValue("This book is already in your library");
       }
       return rejectWithValue(e.response?.data?.message);
     }
-  }
+  },
 );
 
 export const removeFromLibrary = createAsyncThunk(
@@ -62,5 +62,5 @@ export const removeFromLibrary = createAsyncThunk(
     } catch (e) {
       return rejectWithValue(e.response?.data?.message);
     }
-  }
+  },
 );

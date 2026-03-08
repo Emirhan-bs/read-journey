@@ -50,7 +50,10 @@ const ReadingPage = () => {
   const handleStart = async () => {
     if (!page) return toast.error("Enter page number");
     try {
-      await api.post("/books/reading/start", { id: bookId, page: Number(page) });
+      await api.post("/books/reading/start", {
+        id: bookId,
+        page: Number(page),
+      });
       toast.success("Reading started!");
       dispatch(fetchLibrary());
     } catch (e) {
@@ -61,7 +64,10 @@ const ReadingPage = () => {
   const handleStop = async () => {
     if (!page) return toast.error("Enter page number");
     try {
-      await api.post("/books/reading/finish", { id: bookId, page: Number(page) });
+      await api.post("/books/reading/finish", {
+        id: bookId,
+        page: Number(page),
+      });
       setPage("");
       toast.success("Reading stopped!");
       dispatch(fetchLibrary());
@@ -82,7 +88,9 @@ const ReadingPage = () => {
 
     setDeletingIds((prev) => new Set(prev).add(readingId));
     try {
-      await api.delete(`/books/reading/delete?bookId=${bookId}&readingId=${readingId}`);
+      await api.delete(
+        `/books/reading/delete?bookId=${bookId}&readingId=${readingId}`,
+      );
       dispatch(fetchLibrary());
       toast.success("Session deleted");
     } catch (e) {
@@ -120,7 +128,9 @@ const ReadingPage = () => {
   // Group by date for diary display
   const groupedByDate = progress.reduce((acc, entry) => {
     const key = new Date(entry.startReading).toLocaleDateString("uk-UA", {
-      day: "2-digit", month: "2-digit", year: "numeric",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
     if (!acc[key]) acc[key] = [];
     acc[key].push(entry);
@@ -161,8 +171,8 @@ const ReadingPage = () => {
               {progress.length === 0
                 ? "Progress"
                 : activeTab === "diary"
-                ? "Diary"
-                : "Statistics"}
+                  ? "Diary"
+                  : "Statistics"}
             </span>
             {progress.length > 0 && (
               <div className={styles.tabs}>
@@ -202,13 +212,18 @@ const ReadingPage = () => {
             <ul className={styles.diary}>
               {Object.entries(groupedByDate).map(([dateKey, entries]) =>
                 entries.map((entry, i) => {
-                  const pagesRead = (entry.finishPage || 0) - (entry.startPage || 0);
+                  const pagesRead =
+                    (entry.finishPage || 0) - (entry.startPage || 0);
                   const entryPercent =
                     entry.finishPage && entry.startPage
                       ? ((pagesRead / totalPages) * 100).toFixed(1)
                       : 0;
-                  const startTime = entry.startReading ? new Date(entry.startReading) : null;
-                  const finishTime = entry.finishReading ? new Date(entry.finishReading) : null;
+                  const startTime = entry.startReading
+                    ? new Date(entry.startReading)
+                    : null;
+                  const finishTime = entry.finishReading
+                    ? new Date(entry.finishReading)
+                    : null;
                   const durationMin =
                     startTime && finishTime
                       ? Math.round((finishTime - startTime) / 60000)
@@ -217,20 +232,31 @@ const ReadingPage = () => {
                   const isActive = !entry.finishReading;
 
                   return (
-                    <li key={entry._id || `${dateKey}-${i}`} className={styles.diaryEntry}>
+                    <li
+                      key={entry._id || `${dateKey}-${i}`}
+                      className={styles.diaryEntry}
+                    >
                       {/* Row 1: checkbox + date + pages */}
                       <div className={styles.diaryTop}>
-                        <span className={`${styles.checkbox} ${isActive ? styles.checkboxActive : ""}`} />
+                        <span
+                          className={`${styles.checkbox} ${isActive ? styles.checkboxActive : ""}`}
+                        />
                         <span className={styles.diaryDate}>{dateKey}</span>
-                        <span className={styles.diaryPageCount}>{pagesRead} pages</span>
+                        <span className={styles.diaryPageCount}>
+                          {pagesRead} pages
+                        </span>
                       </div>
 
                       {/* Row 2: stats */}
                       <div className={styles.diaryStats}>
                         <div className={styles.diaryLeft}>
-                          <span className={styles.diaryPercent}>{entryPercent}%</span>
+                          <span className={styles.diaryPercent}>
+                            {entryPercent}%
+                          </span>
                           {durationMin !== null && (
-                            <span className={styles.diaryMinutes}>{durationMin} minutes</span>
+                            <span className={styles.diaryMinutes}>
+                              {durationMin} minutes
+                            </span>
                           )}
                         </div>
                         <div className={styles.diaryRight}>
@@ -248,7 +274,9 @@ const ReadingPage = () => {
                             className={styles.deleteBtn}
                             onClick={() => handleDeleteProgress(entry)}
                             disabled={deletingIds.has(entry._id)}
-                            title={isActive ? "Stop reading first" : "Delete session"}
+                            title={
+                              isActive ? "Stop reading first" : "Delete session"
+                            }
                           >
                             <Icon id="trash" width={16} height={16} />
                           </button>
@@ -256,7 +284,7 @@ const ReadingPage = () => {
                       </div>
                     </li>
                   );
-                })
+                }),
               )}
             </ul>
           )}
@@ -272,10 +300,21 @@ const ReadingPage = () => {
               <div className={styles.circleCard}>
                 <div className={styles.circleWrap}>
                   <svg viewBox="0 0 120 120" className={styles.circle}>
-                    <circle cx="60" cy="60" r="50" fill="none" stroke="#1c1c1c" strokeWidth="14" />
                     <circle
-                      cx="60" cy="60" r="50"
-                      fill="none" stroke="#30b94d" strokeWidth="14"
+                      cx="60"
+                      cy="60"
+                      r="50"
+                      fill="none"
+                      stroke="#1c1c1c"
+                      strokeWidth="14"
+                    />
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="50"
+                      fill="none"
+                      stroke="#30b94d"
+                      strokeWidth="14"
                       strokeDasharray={`${2 * Math.PI * 50}`}
                       strokeDashoffset={`${2 * Math.PI * 50 * (1 - percent / 100)}`}
                       strokeLinecap="round"
@@ -287,8 +326,12 @@ const ReadingPage = () => {
                 <div className={styles.statsLabelRow}>
                   <span className={styles.greenDot}>●</span>
                   <div>
-                    <p className={styles.statsPercent}>{percentExact.toFixed(2)}%</p>
-                    <p className={styles.statsPagesRead}>{totalRead} pages read</p>
+                    <p className={styles.statsPercent}>
+                      {percentExact.toFixed(2)}%
+                    </p>
+                    <p className={styles.statsPagesRead}>
+                      {totalRead} pages read
+                    </p>
                   </div>
                 </div>
               </div>
@@ -308,7 +351,11 @@ const ReadingPage = () => {
           <div className={styles.bookWrap}>
             <div className={styles.bookImgWrap}>
               {book.imageUrl ? (
-                <img src={book.imageUrl} alt={book.title} className={styles.bookImg} />
+                <img
+                  src={book.imageUrl}
+                  alt={book.title}
+                  className={styles.bookImg}
+                />
               ) : (
                 <div className={styles.bookImgPlaceholder} />
               )}
@@ -317,12 +364,31 @@ const ReadingPage = () => {
             <p className={styles.bookAuthor}>{book.author}</p>
 
             {/* Red circle button — white ring border when actively reading */}
-            <div className={`${styles.recordRing} ${isReading ? styles.recordRingActive : ""}`}>
+            <div
+              className={`${styles.recordRing} ${isReading ? styles.recordRingActive : ""}`}
+            >
               <button
                 className={styles.recordBtn}
                 onClick={isReading ? handleStop : handleStart}
                 title={isReading ? "Stop reading" : "Start reading"}
-              />
+              >
+                {isReading ? (
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <rect
+                      x="1"
+                      y="1"
+                      width="12"
+                      height="12"
+                      rx="2"
+                      fill="#ffffff"
+                    />
+                  </svg>
+                ) : (
+                  <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+                    <path d="M1.5 1.5L12.5 8L1.5 14.5V1.5Z" fill="#ffffff" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         )}

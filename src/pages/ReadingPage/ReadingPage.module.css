@@ -60,13 +60,14 @@
   color: var(--color-grey-1);
 }
 
-/* hide number arrows */
 .input::-webkit-outer-spin-button,
 .input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  margin: 0;
 }
 .input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .actionBtn {
@@ -118,7 +119,9 @@
   align-items: center;
   justify-content: center;
   color: var(--color-grey-1);
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .tab:hover {
@@ -453,6 +456,9 @@
 }
 
 .recordBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -468,12 +474,20 @@
 }
 
 .recordRingActive .recordBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   animation: pulse 1.6s infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.65; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
 }
 
 /* ── Done modal ── */
@@ -510,14 +524,31 @@
 
 /* ── Responsive ── */
 @media (max-width: 767px) {
-  .page { flex-direction: column; }
-  .sidebar { width: 100%; padding: 20px; }
-  .content { padding: 20px; }
-  .timeLeft { display: none; }
-  .bookImgWrap { width: 160px; height: 240px; }
+  .page {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    padding: 20px;
+  }
+  .content {
+    padding: 20px;
+  }
+  .timeLeft {
+    display: none;
+  }
+  .bookImgWrap {
+    width: 160px;
+    height: 240px;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1279px) {
-  .sidebar { width: 230px; }
-  .circleWrap { width: 130px; height: 130px; }
+  .sidebar {
+    width: 230px;
+  }
+  .circleWrap {
+    width: 130px;
+    height: 130px;
+  }
 }

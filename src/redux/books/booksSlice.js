@@ -13,6 +13,8 @@ const booksSlice = createSlice({
     totalPages: 0,
     currentPage: 1,
     library: [],
+    // Persistent map of bookId -> imageUrl so fetchLibrary never wipes covers
+    imageCache: {},
     filter: "all",
     isLoading: false,
     error: null,
@@ -34,29 +36,47 @@ const booksSlice = createSlice({
         state.isLoading = false;
         state.recommended = action.payload.results;
         state.totalPages = action.payload.totalPages;
+        // Build imageCache from recommended list (title+author -> imageUrl)
+        action.payload.results.forEach((book) => {
+          if (book.imageUrl) {
+            const key = `${book.title}||${book.author}`;
+            state.imageCache[key] = book.imageUrl;
+          }
+        });
       })
       .addCase(fetchRecommended.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
 
+      // fetchLibrary — patch imageUrl from cache so server's null never wins
       .addCase(fetchLibrary.fulfilled, (state, action) => {
-        state.library = action.payload ?? [];
+        const books = action.payload ?? [];
+        state.library = books.map((book) => {
+          if (book.imageUrl) return book;
+          const key = `${book.title}||${book.author}`;
+          const cached = state.imageCache[key];
+          return cached ? { ...book, imageUrl: cached } : book;
+        });
       })
 
+      // addToLibrary — save imageUrl to cache, then store book with image
       .addCase(addToLibrary.fulfilled, (state, action) => {
-        const incoming = action.payload?.book ?? action.payload;
+        const incoming = action.payload;
         if (!incoming?._id) return;
-        const exists = state.library.some((b) => b._id === incoming._id);
-        if (!exists) {
-          state.library.push(incoming);
+
+        // Persist imageUrl in cache so future fetchLibrary calls don't lose it
+        if (incoming.imageUrl) {
+          const key = `${incoming.title}||${incoming.author}`;
+          state.imageCache[key] = incoming.imageUrl;
         }
+
+        const exists = state.library.some((b) => b._id === incoming._id);
+        if (!exists) state.library.push(incoming);
       })
 
       .addCase(removeFromLibrary.fulfilled, (state, action) => {
-        state.library = state.library.filter(
-          (book) => book._id !== action.payload
-        );
+        state.library = state.library.filter((b) => b._id !== action.payload);
       });
   },
 });
