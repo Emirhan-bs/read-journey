@@ -14,7 +14,7 @@ A full-stack book tracking web application that helps you manage your reading li
 
 | Register / Login                               | Recommended                                   | My Library                                      | My Reading                                      |
 | ---------------------------------------------- | --------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| ![Register](./public/screenshots/register.png) | ![Recommended](./public/screenshots/home.png) | ![Library](./public\screenshots\my-library.png) | ![Reading](./public/screenshots/my-reading.png) |
+| ![Register](./public/screenshots/register.png) | ![Recommended](./public/screenshots/home.png) | ![Library](./public/screenshots/my-library.png) | ![Reading](./public/screenshots/my-reading.png) |
 
 ---
 
