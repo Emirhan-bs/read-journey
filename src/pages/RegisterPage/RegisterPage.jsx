@@ -8,7 +8,6 @@ import { useState } from "react";
 import Icon from "../../components/Icon/Icon";
 import styles from "./RegisterPage.module.css";
 import toast from "react-hot-toast";
-import iphoneImg from "../../assets/images/iphone.svg";
 
 const schema = yup.object({
   name: yup.string().required("Name is required"),
@@ -113,13 +112,7 @@ const RegisterPage = () => {
           </form>
         </div>
       </div>
-      <div className={styles.imageSide}>
-        <img
-          src={iphoneImg}
-          alt="app preview"
-          style={{ width: "100%", height: "100%", objectFit: "contain" }}
-        />{" "}
-      </div>
+      <div className={styles.imageSide}></div>
     </div>
   );
 };

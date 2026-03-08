@@ -15,6 +15,7 @@ import Icon from "../../components/Icon/Icon";
 import Modal from "../../components/Modal/Modal";
 import styles from "./RecommendedPage.module.css";
 import toast from "react-hot-toast";
+import booksImg from "../../assets/images/books/books.png";
 
 const getLimit = () => {
   const w = window.innerWidth;
@@ -111,11 +112,7 @@ const RecommendedPage = () => {
         </div>
 
         <div className={styles.quoteBlock}>
-          <img
-            src="/src/assets/images/books/books.png"
-            alt="books"
-            className={styles.quoteImg}
-          />
+          <img src={booksImg} alt="books" className={styles.quoteImg} />
           <p className={styles.quoteText}>
             "Books are <strong>windows</strong> to the world, and reading is a
             journey into the unknown."
